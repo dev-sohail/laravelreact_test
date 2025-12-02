@@ -25,7 +25,14 @@ function ElementsWrapper({ stripePromise, amount, currency, stripeKey }) {
                     return;
                 }
 
-                const response = await axios.post(route('checkout.payment-intent'), {
+                const paymentIntentRoute = route('checkout.payment-intent');
+                if (!paymentIntentRoute) {
+                    setError('Payment route not found. Please refresh the page.');
+                    setIsLoading(false);
+                    return;
+                }
+
+                const response = await axios.post(paymentIntentRoute, {
                     amount: amount,
                 });
 
@@ -141,11 +148,17 @@ function CheckoutForm({ amount, currency, stripeKey, clientSecret }) {
                 return;
             }
 
+            // Build return URL properly
+            const successRoute = route('checkout.success');
+            const returnUrl = successRoute.startsWith('http') 
+                ? successRoute 
+                : `${window.location.origin}${successRoute.startsWith('/') ? '' : '/'}${successRoute}`;
+
             const { error: confirmError, paymentIntent } = await stripe.confirmPayment({
                 elements,
                 clientSecret,
                 confirmParams: {
-                    return_url: window.location.origin + route('checkout.success'),
+                    return_url: returnUrl,
                 },
                 redirect: 'if_required',
             });
@@ -155,8 +168,13 @@ function CheckoutForm({ amount, currency, stripeKey, clientSecret }) {
                 setIsProcessing(false);
             } else if (paymentIntent && paymentIntent.status === 'succeeded') {
                 try {
-                    const response = await axios.post(route('checkout.confirm'), {
-                    payment_intent_id: paymentIntent.id,
+                    const confirmRoute = route('checkout.confirm');
+                    if (!confirmRoute) {
+                        throw new Error('Route not found');
+                    }
+
+                    const response = await axios.post(confirmRoute, {
+                        payment_intent_id: paymentIntent.id,
                     }, {
                         headers: {
                             'Accept': 'application/json',
@@ -167,11 +185,16 @@ function CheckoutForm({ amount, currency, stripeKey, clientSecret }) {
                     if (response.data.success && response.data.redirect_url) {
                         window.location.href = response.data.redirect_url;
                     } else {
-                        router.visit(route('checkout.success', {
+                        const successRoute = route('checkout.success', {
                             payment_intent_id: paymentIntent.id,
                             amount: paymentIntent.amount,
                             currency: paymentIntent.currency,
-                        }));
+                        });
+                        if (successRoute) {
+                            router.visit(successRoute);
+                        } else {
+                            window.location.href = `/checkout/success?payment_intent_id=${paymentIntent.id}&amount=${paymentIntent.amount}&currency=${paymentIntent.currency}`;
+                        }
                     }
                 } catch (err) {
                     console.error('Confirmation error:', err);
@@ -181,11 +204,16 @@ function CheckoutForm({ amount, currency, stripeKey, clientSecret }) {
                         setError(err.response?.data?.error || 'Payment verification failed. Please contact support.');
                         setIsProcessing(false);
                     } else {
-                        router.visit(route('checkout.success', {
+                        const successRoute = route('checkout.success', {
                             payment_intent_id: paymentIntent.id,
                             amount: paymentIntent.amount,
                             currency: paymentIntent.currency,
-                        }));
+                        });
+                        if (successRoute) {
+                            router.visit(successRoute);
+                        } else {
+                            window.location.href = `/checkout/success?payment_intent_id=${paymentIntent.id}&amount=${paymentIntent.amount}&currency=${paymentIntent.currency}`;
+                        }
                     }
                 }
             } else {
