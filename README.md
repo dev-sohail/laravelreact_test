@@ -1,40 +1,99 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel + React Application
 
-## Stripe Integration
+A modern web application built with Laravel 12 and React 19 using Inertia.js.
 
-This project includes a basic Stripe integration for processing payments.
+## Features
 
-### Setup
+- **Laravel 12** - Latest version of the Laravel framework
+- **React 19** - Modern React with latest features
+- **Inertia.js** - Seamless SPA experience without API complexity
+- **Tailwind CSS** - Utility-first CSS framework
+- **Vite** - Next-generation frontend tooling
+- **Ziggy** - Use Laravel routes in JavaScript
 
-1.  **Configure Environment Variables**:
-    Add your Stripe API keys to the `.env` file:
-    ```env
-    STRIPE_KEY=pk_test_...
-    STRIPE_SECRET=sk_test_...
-    STRIPE_CURRENCY=usd
-    ```
+## Prerequisites
 
-2.  **Install Dependencies**:
-    Ensure dependencies are installed:
-    ```bash
-    composer install
-    ```
+- PHP 8.2 or higher
+- Composer
+- Node.js and npm
 
-### Usage
+## Installation
 
-1.  **Checkout**:
-    Visit `/checkout` to see the payment page.
-    Click "Pay with Stripe" to initiate a payment session.
+1. **Install PHP Dependencies**
+   ```bash
+   composer install
+   ```
 
-2.  **Success**:
-    After a successful payment, you will be redirected to `/checkout/success`.
+2. **Install JavaScript Dependencies**
+   ```bash
+   npm install
+   ```
 
-3.  **Cancel**:
-    If you cancel the payment, you will be redirected to `/checkout/cancel`.
+3. **Environment Setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-### Testing
+4. **Database Setup** (if needed)
+   ```bash
+   php artisan migrate
+   ```
 
-You can use Stripe's test card numbers to verify the integration.
-- **Card Number**: `4242 4242 4242 4242`
-- **Expiry**: Any future date
-- **CVC**: Any 3 digits
+## Development
+
+### Start Development Servers
+
+**Option 1: Using Composer Script (Recommended)**
+```bash
+composer run dev
+```
+
+This will start both the Laravel server and Vite dev server concurrently.
+
+**Option 2: Manual Start**
+
+Terminal 1 - Laravel Server:
+```bash
+php artisan serve
+```
+
+Terminal 2 - Vite Dev Server:
+```bash
+npm run dev
+```
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+## Project Structure
+
+```
+resources/
+├── js/
+│   ├── Pages/          # React page components
+│   ├── Components/     # Reusable React components
+│   ├── app.jsx         # Main application entry point
+│   └── bootstrap.js    # Bootstrap file for axios, etc.
+├── css/
+│   └── app.css         # Global styles
+└── views/
+    └── app.blade.php   # Main Inertia root template
+```
+
+## Creating New Pages
+
+1. Create a new component in `resources/js/Pages/`
+2. Add a route in `routes/web.php`:
+   ```php
+   Route::get('/your-page', function () {
+       return Inertia::render('YourPage');
+   });
+   ```
+
+## License
+
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

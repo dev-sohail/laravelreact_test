@@ -35,12 +35,4 @@ return [
         ],
     ],
 
-    'stripe' => [
-        'secret' => env('STRIPE_SECRET'),
-        'key' => env('STRIPE_KEY'),
-        'currency' => env('STRIPE_CURRENCY', 'usd'),
-        'success_url' => env('STRIPE_SUCCESS_URL', env('APP_URL').'/checkout/success'),
-        'cancel_url' => env('STRIPE_CANCEL_URL', env('APP_URL').'/checkout/cancel'),
-    ],
-
 ];

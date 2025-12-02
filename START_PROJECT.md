@@ -1,77 +1,76 @@
-# Starting the Project
+# Getting Started
 
-## Prerequisites
-Make sure you have:
-- PHP 8.2+ (MAMP includes this)
-- Composer installed
-- Node.js and npm installed
+## Quick Start Guide
 
-## Step 1: Install Dependencies
+### Step 1: Install Dependencies
 
-### Install PHP Dependencies (Composer)
+**PHP Dependencies:**
 ```bash
 composer install
 ```
 
-If composer is not in your PATH, you may need to use the full path or add it to your PATH.
-
-### Install JavaScript Dependencies (npm)
+**JavaScript Dependencies:**
 ```bash
 npm install
 ```
 
-If npm is not in your PATH, you may need to use the full path or add it to your PATH.
+### Step 2: Environment Configuration
 
-## Step 2: Configure Environment
-
-Make sure your `.env` file has the following Stripe configuration:
-```env
-STRIPE_KEY=pk_test_your_publishable_key_here
-STRIPE_SECRET=sk_test_your_secret_key_here
-STRIPE_CURRENCY=usd
+```bash
+cp .env.example .env
+php artisan key:generate
 ```
 
-## Step 3: Start Development Servers
+### Step 3: Start Development
 
-### Option 1: Using Laravel's Dev Script (Recommended)
-If you have the dev script configured, you can run:
+**Start both servers at once:**
 ```bash
 composer run dev
 ```
 
-This will start both the Laravel server and Vite dev server concurrently.
+This will start:
+- Laravel server on `http://localhost:8000`
+- Vite dev server for hot module replacement
 
-### Option 2: Manual Start (Two Terminals)
+**Or start manually:**
 
-**Terminal 1 - Laravel Server:**
+Terminal 1:
 ```bash
 php artisan serve
 ```
 
-**Terminal 2 - Vite Dev Server:**
+Terminal 2:
 ```bash
 npm run dev
 ```
 
-## Step 4: Access the Application
+### Step 4: Access the Application
 
-Once both servers are running:
-- Laravel server: http://localhost:8000
-- Checkout page: http://localhost:8000/checkout
+Open your browser and navigate to:
+```
+http://localhost:8000
+```
+
+## Building for Production
+
+```bash
+npm run build
+```
 
 ## Troubleshooting
 
-### If npm/composer commands are not found:
+### Commands Not Found
+
+If `composer` or `npm` commands are not found:
 1. Add them to your PATH, or
-2. Use full paths to the executables, or
-3. Use MAMP's terminal which may have them pre-configured
+2. Use full paths to the executables
 
-### If you get CSRF token errors:
-- Make sure you're accessing the site through the Laravel server (not directly via file://)
+### CSRF Token Errors
+
+- Make sure you're accessing the site through the Laravel server
 - Clear your browser cache
+- Run `php artisan config:clear`
 
-### If Stripe payment doesn't work:
-- Verify your Stripe keys are correct in `.env`
-- Make sure you're using test keys (pk_test_... and sk_test_...)
-- Check the browser console for any JavaScript errors
+### Vite Manifest Not Found
 
+Run `npm run build` to generate the manifest file.
