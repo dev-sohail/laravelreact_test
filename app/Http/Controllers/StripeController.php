@@ -96,6 +96,23 @@ class StripeController extends Controller
                 // Generate order number
                 $orderNumber = 'ORD-' . date('Y') . '-' . strtoupper(substr(uniqid(), -6));
 
+                // If it's an AJAX request, return JSON
+                if ($request->expectsJson() || $request->ajax()) {
+                    return response()->json([
+                        'success' => true,
+                        'redirect_url' => route('checkout.success', [
+                            'payment_intent_id' => $paymentIntent->id,
+                            'amount' => $paymentIntent->amount,
+                            'currency' => $paymentIntent->currency,
+                            'order_number' => $orderNumber,
+                        ]),
+                        'order_number' => $orderNumber,
+                        'amount' => $paymentIntent->amount,
+                        'currency' => $paymentIntent->currency,
+                    ]);
+                }
+
+                // Otherwise redirect normally
                 return redirect()->route('checkout.success', [
                     'payment_intent_id' => $paymentIntent->id,
                     'amount' => $paymentIntent->amount,
@@ -104,12 +121,39 @@ class StripeController extends Controller
                 ]);
             }
 
+            // Payment not succeeded
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Payment was not completed.',
+                    'redirect_url' => route('checkout.cancel'),
+                ], 400);
+            }
+
             return redirect()->route('checkout.cancel')->with('error', 'Payment was not completed.');
         } catch (ApiErrorException $e) {
             Log::error('Stripe Payment Confirmation Error: ' . $e->getMessage());
+            
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Payment verification failed.',
+                    'redirect_url' => route('checkout.cancel'),
+                ], 500);
+            }
+            
             return redirect()->route('checkout.cancel')->with('error', 'Payment verification failed.');
         } catch (\Exception $e) {
             Log::error('Payment Confirmation Error: ' . $e->getMessage());
+            
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'An error occurred while processing your payment.',
+                    'redirect_url' => route('checkout.cancel'),
+                ], 500);
+            }
+            
             return redirect()->route('checkout.cancel')->with('error', 'An error occurred while processing your payment.');
         }
     }
