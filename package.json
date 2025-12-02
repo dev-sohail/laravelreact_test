@@ -8,7 +8,8 @@
     },
     "dependencies": {
         "@stripe/react-stripe-js": "^2.7.1",
-        "@stripe/stripe-js": "^4.10.0"
+        "@stripe/stripe-js": "^4.10.0",
+        "ziggy-js": "^2.0.0"
     },
     "devDependencies": {
         "@inertiajs/react": "^2.2.19",
