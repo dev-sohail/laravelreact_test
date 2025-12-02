@@ -11,17 +11,17 @@ export default function Cancel({ error }) {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-red-50 to-orange-50 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-red-50 to-orange-50 flex items-center justify-center p-3 sm:p-4">
             <div
-                className={`max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden text-center transition-all duration-500 ${
+                className={`max-w-md w-full bg-white rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl overflow-hidden text-center transition-all duration-500 ${
                     isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
             >
                 {/* Cancel Icon with Animation */}
-                <div className="bg-gradient-to-br from-red-400 to-orange-500 p-8">
-                    <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg animate-shake">
+                <div className="bg-gradient-to-br from-red-400 to-orange-500 p-6 sm:p-8">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg animate-shake">
                         <svg
-                            className="w-12 h-12 text-red-600"
+                            className="w-10 h-10 sm:w-12 sm:h-12 text-red-600"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -34,12 +34,12 @@ export default function Cancel({ error }) {
                             />
                         </svg>
                     </div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Payment Cancelled</h1>
-                    <p className="text-red-100 text-sm">No charges were made</p>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">Payment Cancelled</h1>
+                    <p className="text-red-100 text-xs sm:text-sm">No charges were made</p>
                 </div>
 
-                <div className="p-8">
-                    <p className="text-gray-600 mb-6 leading-relaxed">
+                <div className="p-4 sm:p-6 md:p-8">
+                    <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 leading-relaxed">
                         Your payment was cancelled and you haven't been charged. If you
                         encountered an issue or changed your mind, you can try again anytime.
                     </p>

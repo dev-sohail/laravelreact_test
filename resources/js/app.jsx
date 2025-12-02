@@ -1,6 +1,5 @@
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
-import { Ziggy } from 'ziggy-js'
 import ErrorBoundary from './Components/ErrorBoundary'
 import './bootstrap'
 
@@ -11,12 +10,9 @@ createInertiaApp({
     },
     setup({ el, App, props }) {
         // Initialize Ziggy with routes from Inertia props
-        if (props.initialPage?.props?.ziggy) {
-            Ziggy.default = props.initialPage.props.ziggy
+        if (props.initialPage?.props?.ziggy && typeof window !== 'undefined') {
             // Make Ziggy available globally for route helper
-            if (typeof window !== 'undefined') {
-                window.Ziggy = props.initialPage.props.ziggy
-            }
+            window.Ziggy = props.initialPage.props.ziggy
         }
         
         // Setup global error handler for unhandled promise rejections
